@@ -1,0 +1,53 @@
+name: ticgotnotact
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.2.1
+  newton_particles: ^0.1.8
+  flutter_processing: ^0.2.0
+  render: ^0.1.4
+  stroke_text: ^0.0.3
+  drawing_animation: ^1.0.1
+  flutter_launcher_icons: ^0.11.0
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.11.0
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter_icons:
+  image_path: "Assets/TicGotNoTACT.jpg"
+  android: true
+  ios: true
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "Assets/TicGotNoTACT.jpg"
+
+  windows:
+    generate: true
+    image_path: "Assets/TicGotNoTACT.jpg"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "Assets/TicGotNoTACT.jpg"
+
+flutter:
+
+
+  uses-material-design: true
+
