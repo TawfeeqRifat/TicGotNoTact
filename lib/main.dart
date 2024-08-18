@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ticgotnotact/pages/mainMenu.dart';
 import 'package:flutter_launcher_icons/abs/icon_generator.dart';
 import 'package:flutter_launcher_icons/android.dart';
@@ -17,11 +18,19 @@ import 'package:flutter_launcher_icons/web/web_icon_generator.dart';
 import 'package:flutter_launcher_icons/web/web_template.dart';
 import 'package:flutter_launcher_icons/windows/windows_icon_generator.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
+import 'Animations/FallAnimation.dart';
 import 'pages/GamePage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
   runApp(const TicGotNoTact());
 }
+
+
 
 class TicGotNoTact extends StatelessWidget {
   const TicGotNoTact({super.key});
@@ -38,7 +47,7 @@ class TicGotNoTact extends StatelessWidget {
         '/MainMenu': (context ) => const MainMenu(),
         '/GameWindow': (context ) => const GameWindow()
       },
-      home: const MainMenu(),
+      home: MainMenu(),
     );
   }
 }

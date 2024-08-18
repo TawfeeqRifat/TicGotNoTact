@@ -1,15 +1,15 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:core';
+import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:drawing_animation/drawing_animation.dart';
 
 import 'package:ticgotnotact/pages/mainMenu.dart';
 
 import '../functionality.dart';
-import 'mainMenu.dart';
 
 class GameWindow extends StatefulWidget {
   const GameWindow({super.key});
@@ -19,6 +19,10 @@ class GameWindow extends StatefulWidget {
 }
 
 class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
+
+  //settings
+  late int whichTurnAnimation=2;
+
 
   //mechanic
   int noOfMoves=0;
@@ -41,6 +45,11 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
     _errorController.forward();
     await Future.delayed(const Duration(milliseconds: 100));
     _errorController.reverse();
+  }
+
+  Future<void> triggerTurnIndicator2Animation() async {
+     await _turnIndicator2Controller.forward(from: 0.0);
+     _turnIndicator2Controller.reset();
   }
   Future<void> triggerTurnIndicatorAnimation(Size systemSize) async {
     //for turn indicator animation
@@ -113,6 +122,7 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
   late AnimationController _winnerAnimation1;
   late AnimationController _winnerAnimation2;
   late AnimationController _winnerAnimation3;
+  late AnimationController _turnIndicator2Controller;
 
   late final Animation<Offset> _winnerAnimation1Offest = Tween<Offset>(
     begin: Offset(-1.0,0),
@@ -132,6 +142,8 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
           curve: Curves.slowMiddle
       )
   );
+
+
   Future<void> announcementAnimation(Size systemSize,String announcementMessage,String flashMessage) async {
     //first slide
     showDialog(context: context,
@@ -288,7 +300,7 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
                             child: Center(
                               child: DefaultTextStyle(
                                 style: TextStyle(),
-                                child: Text('MAINMENU',
+                                child: Text('MAIN MENU',
                                   style: GoogleFonts.signikaNegative(
                                     fontSize: 40,
                                     color: Colors.white,
@@ -315,7 +327,6 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
   void initState(){
     super.initState();
 
-
     playerColor = [Colors.transparent,player1Color,player2Color];
     xIcon= Icon(Icons.close,
       size: tileSize,
@@ -340,22 +351,28 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
       });
 
     _turnIndicatorController= AnimationController(
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
+    );
+    _turnIndicator2Controller=AnimationController(
+      duration: const Duration(milliseconds: 600),
+        vsync: this,
     );
 
     _winnerAnimation1= AnimationController(vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 2000),
     );
     _winnerAnimation2= AnimationController(vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 2000),
     );
     _winnerAnimation3= AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
     );
 
-    triggerTurnIndicatorAnimation(Size(1000,1000));
+
+    // triggerTurnIndicatorAnimation(Size(1000,1000));
+    // triggerTurnIndicator2Animation();
   }
 
   @override
@@ -400,7 +417,7 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
                                         if(checkWinner(i,j,board)){
                                           debugPrint('\n\nThe Winner is ${board[i][j]}');
                                           //trigger winner animation
-                                          announcementAnimation(systemSize,'Player$whichPlayer Won!','TIC TAC TOE');
+                                          announcementAnimation(systemSize,'Player$whichPlayer Won!','Player$whichPlayer Won!');
 
                                         }
 
@@ -417,7 +434,13 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
 
 
                                           //triggering that animation
-                                          triggerTurnIndicatorAnimation(systemSize);
+                                          if(whichTurnAnimation==1) {
+                                            triggerTurnIndicatorAnimation(systemSize);
+                                          }
+                                          else {
+                                            triggerTurnIndicator2Animation();
+                                            print("triggers");
+                                          }
                                         }
                                       }
                                       //when player selects already selected box
@@ -456,26 +479,29 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Transform.rotate(
-                        angle: 6,
-                        child: Container(
-                            height: 40,
-                            width: 160,
-                            decoration: BoxDecoration(
-                              color: playerColor[whichPlayer],
+                      RotationTransition(
+                        turns: Tween(begin: 0.0, end: 1.0).animate(_turnIndicator2Controller),
+                        child: Transform.rotate(
+                          angle: 6,
+                          child: Container(
+                              height: 40,
+                              width: 160,
+                              decoration: BoxDecoration(
+                                color: playerColor[whichPlayer],
 
-                            ),
-                            child: Center(
-                                child: Text('Player$whichPlayer ',
-                                  style: GoogleFonts.signikaNegative(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 30,
-                                  ),
-                                )
-                            )
+                              ),
+                              child: Center(
+                                  child: Text('Player$whichPlayer ',
+                                    style: GoogleFonts.signikaNegative(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 30,
+                                    ),
+                                  )
+                              )
 
+                          ),
                         ),
                       )
                     ],
@@ -606,7 +632,7 @@ class _GameWindowState extends State<GameWindow> with TickerProviderStateMixin{
                                               child: Center(
                                                 child: DefaultTextStyle(
                                                   style: TextStyle(),
-                                                  child: Text('MAINMENU',
+                                                  child: Text('MAIN MENU',
                                                     style: GoogleFonts.signikaNegative(
                                                       fontSize: 40,
                                                       color: Colors.white,

@@ -3,9 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newton_particles/newton_particles.dart';
+import 'package:ticgotnotact/Animations/FallAnimation.dart';
 
 import '../Animations/custom.dart';
 
@@ -25,104 +28,88 @@ class _MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backGround,
-      body: Newton(
-                activeEffects: [
-                  RainEffect(
-                    effectConfiguration: const EffectConfiguration(
-                      foreground: false,
-                      //fadeInCurve: Curves.easeOut,
-                      particlesPerEmit:1,
-                      distanceCurve: Curves.easeIn,
-                      minBeginScale: 1,
-                      maxBeginScale: 10,
-                      minDuration: 1000,
-                      maxDuration: 5000,
+      body: Stack(
+        children: [
+           FallingAnimation(),
+
+
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: SeeThroughText(
+                  text: 'TIC GOT NO TACT',
+                  fontSize: 90,
+                  opacity: 0.9,
+                )
+              ),
+              const SizedBox(height: 100,),
+
+              //play button
+              Padding(padding: const EdgeInsets.only(left: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, '/GameWindow');
+                  },
+                  child: CustomPaint(
+                    painter: customShape(),
+                    child: const SizedBox(
+                      height: 100,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SeeThroughText(
+                              text: 'PLAY',
+                              fontSize: 60.0,
+                              opacity: 0.7,
+                            ),
+                            SizedBox(width: 40,),
+                          ],
+                        )
+                      )
                     ),
-                    particleConfiguration: ParticleConfiguration(
-                      shape: CircleShape(),
-                      size: const Size(10,10),
-                      color: const SingleParticleColor(color: Colors.yellow),
+                  ),
+                )
+              ),
+              const SizedBox(height:30,),
 
-                    )
-                  )
-                ],
-
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Center(
-                                    child: SeeThroughText(
-                                      text: 'TIC GOT NO TACT',
-                                      fontSize: 90,
-                                      opacity: 0.9,
-                                    )
-                                  ),
-                                  const SizedBox(height: 100,),
-
-                                  //play button
-                                  Padding(padding: const EdgeInsets.only(left: 20),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/GameWindow');
-                                      },
-                                      child: CustomPaint(
-                                        painter: customShape(),
-                                        child: const SizedBox(
-                                          height: 100,
-                                          child: Center(
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                SeeThroughText(
-                                                  text: 'PLAY',
-                                                  fontSize: 60.0,
-                                                  opacity: 0.7,
-                                                ),
-                                                SizedBox(width: 40,),
-                                              ],
-                                            )
-                                          )
-                                        ),
+              //exit button
+              Padding(padding: EdgeInsets.only(right: 20),
+                  child: GestureDetector(
+                    onTap: ()=> exit(0),
+                    child: Transform.flip(
+                      flipX: true,
+                      child: CustomPaint(
+                        painter: customShape(),
+                        child: SizedBox(
+                            height: 100,
+                            child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Transform.flip(
+                                      flipX: true,
+                                      child: const SeeThroughText(
+                                        text: 'EXIT',
+                                        fontSize: 60.0,
+                                        opacity: 0.7,
                                       ),
-                                    )
-                                  ),
-                                  const SizedBox(height:30,),
+                                    ),
+                                    const SizedBox(width: 40,),
+                                  ],
+                                )
+                            )
+                        ),
+                      ),
+                    ),
+                  )
+              ),
 
-                                  //exit button
-                                  Padding(padding: EdgeInsets.only(right: 20),
-                                      child: GestureDetector(
-                                        onTap: ()=> SystemNavigator.pop(),
-                                        child: Transform.flip(
-                                          flipX: true,
-                                          child: CustomPaint(
-                                            painter: customShape(),
-                                            child: SizedBox(
-                                                height: 100,
-                                                child: Center(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-                                                      children: [
-                                                        Transform.flip(
-                                                          flipX: true,
-                                                          child: const SeeThroughText(
-                                                            text: 'EXIT',
-                                                            fontSize: 60.0,
-                                                            opacity: 0.7,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(width: 40,),
-                                                      ],
-                                                    )
-                                                )
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                  ),
-
-                                ],
-                              ),
+            ],
+          ),
+        ],
       ),
 
     );
